@@ -83,5 +83,21 @@ public class TransactionDto implements Serializable {
                 ", sum=" + sum +
                 '}';
     }
+
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            TransactionDto transactionDto = new TransactionDto();
+            transactionDto.cnp = this.cnp;
+            transactionDto.iban = this.iban;
+            transactionDto.desc = this.desc;
+            transactionDto.type = this.type;
+            transactionDto.name = this.name;
+            transactionDto.sum = this.sum;
+            return transactionDto;
+        }
+    }
 }
 

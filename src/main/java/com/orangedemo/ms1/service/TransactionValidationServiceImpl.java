@@ -1,6 +1,7 @@
 package com.orangedemo.ms1.service;
 
 import com.orangedemo.ms1.dto.TransactionDto;
+import com.orangedemo.ms1.dto.TransactionType;
 import com.orangedemo.ms1.exceptions.TransactionNotValidException;
 import org.springframework.stereotype.Service;
 
@@ -11,27 +12,41 @@ public class TransactionValidationServiceImpl implements TransactionValidationSe
 
     @Override
     public void validateTransaction(TransactionDto transactionDto) {
-        boolean isValidTransaction = isCnpValid(transactionDto.getCnp()) && isIbanValid(transactionDto.getIban())
-                && isNameValid(transactionDto.getName()) && isSumValid(transactionDto.getSum());
-
-        if (!isValidTransaction) {
-            throw new TransactionNotValidException();
+        if (!isValidCnp(transactionDto.getCnp())) {
+            throw new TransactionNotValidException("CNP is not valid!");
+        } else if (!isValidIban(transactionDto.getIban())) {
+            throw new TransactionNotValidException("IBAN is not valid!");
+        } else if (!isValidName(transactionDto.getName())) {
+            throw new TransactionNotValidException("Name is not valid!");
+        } else if (!isValidSum(transactionDto.getSum())) {
+            throw new TransactionNotValidException("Sum is not valid!");
+        } else if (!isValidTransactionType(transactionDto.getType())) {
+            throw new TransactionNotValidException("Transaction type is not valid!");
         }
     }
 
-    private boolean isNameValid(String name) {
+    private boolean isValidName(String name) {
         return name.matches("^[\\p{L}\\s'.-]+$");
     }
 
-    private boolean isSumValid(BigDecimal sum) {
-        return sum.toString().matches("^[-+]?[0-9]*\\.?[0-9]*$");
+    private boolean isValidSum(BigDecimal sum) {
+        return sum != null && sum.toString().matches("^[+]?[0-9]*\\.?[0-9]*$");
     }
 
-    private boolean isIbanValid(String iban) {
+    private boolean isValidIban(String iban) {
         return iban.matches("^[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{4}[0-9]{7}([a-zA-Z0-9]?){0,9}$");
     }
 
-    private boolean isCnpValid(String cnp) {
+    private boolean isValidCnp(String cnp) {
         return cnp.matches("^\\b[1-8]\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])(0[1-9]|[1-4]\\d|5[0-2]|99)\\d{4}\\b$");
+    }
+
+    private boolean isValidTransactionType(TransactionType transactionType) {
+        for (TransactionType type : TransactionType.values()) {
+            if (type.equals(transactionType)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
