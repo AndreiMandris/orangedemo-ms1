@@ -1,37 +1,25 @@
 package com.orangedemo.ms1.controller;
 
-import com.google.gson.Gson;
 import com.orangedemo.ms1.dto.TransactionDto;
-import com.orangedemo.ms1.service.TransactionValidationService;
+import com.orangedemo.ms1.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.web.bind.annotation.*;
-
-import javax.jms.Queue;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
 
     @Autowired
-    TransactionValidationService transactionValidationService;
-
-    @Autowired
-    private JmsTemplate jmsTemplate;
-
-    @Autowired
-    private Queue queue;
-
-    @Autowired
-    private Gson gson;
+    private TransactionService transactionService;
 
     @PostMapping("/send")
-    public ResponseEntity<TransactionDto> submitTransaction(@RequestBody TransactionDto transactionDto){
-        transactionValidationService.validateTransaction(transactionDto);
-        String transactionJson = gson.toJson(transactionDto);
-        jmsTemplate.convertAndSend(queue, transactionJson);
+    public ResponseEntity<TransactionDto> submitTransaction(@RequestBody TransactionDto transactionDto) {
+        transactionService.handleTransaction(transactionDto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 }

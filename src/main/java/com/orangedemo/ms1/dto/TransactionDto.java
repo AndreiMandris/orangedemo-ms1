@@ -8,7 +8,7 @@ public class TransactionDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private BigDecimal id;
-    private TransactionType type;
+    private String type;
     private String iban;
     private String cnp;
     private String name;
@@ -23,11 +23,11 @@ public class TransactionDto implements Serializable {
         this.id = id;
     }
 
-    public TransactionType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(TransactionType type) {
+    public void setType(String type) {
         this.type = type;
     }
 
