@@ -7,21 +7,12 @@ public class TransactionDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private BigDecimal id;
     private String type;
     private String iban;
     private String cnp;
     private String name;
     private String desc;
     private BigDecimal sum;
-
-    public BigDecimal getId() {
-        return id;
-    }
-
-    public void setId(BigDecimal id) {
-        this.id = id;
-    }
 
     public String getType() {
         return type;
@@ -74,8 +65,7 @@ public class TransactionDto implements Serializable {
     @Override
     public String toString() {
         return "TransactionDto{" +
-                "id=" + id +
-                ", type=" + type +
+                "type=" + type +
                 ", iban='" + iban + '\'' +
                 ", cnp='" + cnp + '\'' +
                 ", name='" + name + '\'' +
