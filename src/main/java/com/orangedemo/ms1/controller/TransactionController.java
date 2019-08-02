@@ -1,5 +1,6 @@
 package com.orangedemo.ms1.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.orangedemo.ms1.dto.TransactionDto;
 import com.orangedemo.ms1.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class TransactionController {
     private TransactionService transactionService;
 
     @PostMapping("/send")
-    public ResponseEntity<TransactionDto> submitTransaction(@RequestBody TransactionDto transactionDto) {
+    public ResponseEntity<TransactionDto> submitTransaction(@RequestBody TransactionDto transactionDto) throws JsonProcessingException {
         transactionService.handleTransaction(transactionDto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }

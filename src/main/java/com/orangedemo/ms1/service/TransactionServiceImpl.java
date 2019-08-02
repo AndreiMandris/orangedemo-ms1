@@ -22,18 +22,13 @@ public class TransactionServiceImpl implements TransactionService {
     private TransactionValidatorService transactionValidatorService;
 
     @Override
-    public void handleTransaction(TransactionDto transactionDto) {
+    public void handleTransaction(TransactionDto transactionDto) throws JsonProcessingException {
         transactionValidatorService.validateTransaction(transactionDto);
         sendTransactionToQueue(transactionDto);
     }
 
-    private void sendTransactionToQueue(TransactionDto transactionDto)  {
-        String transactionJson = null;
-        try {
-            transactionJson = new ObjectMapper().writeValueAsString(transactionDto);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+    private void sendTransactionToQueue(TransactionDto transactionDto) throws JsonProcessingException {
+        String transactionJson = new ObjectMapper().writeValueAsString(transactionDto);
         jmsTemplate.convertAndSend(queue, transactionJson);
     }
 }
