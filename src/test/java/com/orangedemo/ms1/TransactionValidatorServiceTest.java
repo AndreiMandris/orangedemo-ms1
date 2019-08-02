@@ -21,6 +21,7 @@ public class TransactionValidatorServiceTest {
     TransactionValidatorService transactionValidatorService;
 
     TransactionDto validTransaction;
+    TransactionDto invalidTransaction;
 
     @Before
     public void prepareTransaction(){
@@ -32,39 +33,35 @@ public class TransactionValidatorServiceTest {
         validTransaction.setType(TransactionType.IBAN_TO_IBAN.toString());
         validTransaction.setSum(new BigDecimal(400));
         transactionValidatorService.validateTransaction(validTransaction);
+        invalidTransaction = (TransactionDto) validTransaction.clone();
     }
 
     @Test(expected = TransactionNotValidException.class)
     public void transactionHasInvalidIban() {
-        TransactionDto invalidTransaction = (TransactionDto) validTransaction.clone();
         invalidTransaction.setIban("232RO1321");
         transactionValidatorService.validateTransaction(invalidTransaction);
     }
 
     @Test(expected = TransactionNotValidException.class)
     public void transactionHasInvalidCnp() {
-        TransactionDto invalidTransaction = (TransactionDto) validTransaction.clone();
         invalidTransaction.setCnp("2321321");
         transactionValidatorService.validateTransaction(invalidTransaction);
     }
 
     @Test(expected = TransactionNotValidException.class)
     public void transactionHasInvalidName() {
-        TransactionDto invalidTransaction = (TransactionDto) validTransaction.clone();
         invalidTransaction.setName("@ndrei");
         transactionValidatorService.validateTransaction(invalidTransaction);
     }
 
     @Test(expected = TransactionNotValidException.class)
     public void transactionHasInvalidSum() {
-        TransactionDto invalidTransaction = (TransactionDto) validTransaction.clone();
         invalidTransaction.setSum(null);
         transactionValidatorService.validateTransaction(invalidTransaction);
     }
 
     @Test(expected = TransactionNotValidException.class)
     public void transactionHasInvalidType() {
-        TransactionDto invalidTransaction = (TransactionDto) validTransaction.clone();
         invalidTransaction.setType("IBAN_TO_ETC");
         transactionValidatorService.validateTransaction(invalidTransaction);
     }
